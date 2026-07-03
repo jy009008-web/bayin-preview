@@ -1,0 +1,2158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bayin — Enrich The Future</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --brand-blue: #339aec;
+      --brand-blue-light: #4ba8f0;
+      --brand-blue-glow: rgba(51, 154, 236, 0.4);
+      --text-white: #ffffff;
+      --text-gray: #6b8db5;
+      --text-dim: #3a5a8b;
+      --bg-dark: #02040a;
+      --bg-deep: #071b44;
+      --bg-navy: #0a1e3a;
+    }
+
+    html { scroll-behavior: auto; }
+
+    body {
+      font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-white);
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    a, button, [role="button"], input, textarea, select,
+    .brand-card, .eco-word, .hero-cta, .hero-scroll,
+    .topbar-menu, .topbar-nav a, .footer-link, .footer-socials a,
+    .join-cta, .footer-scroll-top, .hero-cta-btn, .menu-icon,
+    .topbar-chat, .hero-scroll, .footer-contact-email { cursor: pointer; }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* =========================================
+       FIXED TOPBAR (always visible)
+       ========================================= */
+    .topbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      padding: 28px 60px;
+      pointer-events: none;
+      transition: background 0.4s ease, backdrop-filter 0.4s ease, padding 0.4s ease, color 0.4s ease;
+      color: #0a1628;
+    }
+
+    .topbar.on-dark {
+      color: #ffffff;
+    }
+
+    .topbar.scrolled {
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(12px);
+      padding: 16px 60px;
+      color: #0a1628;
+    }
+
+    .topbar > * { pointer-events: auto; }
+
+    .topbar-menu {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      color: currentColor;
+      text-decoration: none;
+      cursor: pointer;
+      letter-spacing: 0.5px;
+    }
+
+    .topbar-menu:hover { opacity: 0.8; }
+
+    .menu-icon {
+      display: grid;
+      gap: 5px;
+      width: 19px;
+    }
+
+    .menu-icon span {
+      background: currentColor;
+      display: block;
+      height: 1px;
+      opacity: 0.68;
+    }
+
+    .menu-icon span:nth-child(1) { width: 19px; }
+    .menu-icon span:nth-child(2) { width: 13px; }
+
+    .topbar-wordmark {
+      justify-self: center;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .topbar-wordmark .logo-icon {
+      width: 32px;
+      height: 32px;
+      object-fit: contain;
+    }
+
+    .topbar-wordmark .logo-text {
+      height: 22px;
+      width: auto;
+      object-fit: contain;
+      filter: brightness(0) saturate(0) invert(1);
+      transition: filter 0.4s ease;
+    }
+
+    .topbar.scrolled .topbar-wordmark .logo-text,
+    .topbar:not(.on-dark) .topbar-wordmark .logo-text {
+      filter: none;
+    }
+
+    .topbar-nav {
+      justify-self: end;
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+
+    .topbar-nav a {
+      font-size: 12px;
+      font-weight: 500;
+      color: currentColor;
+      opacity: 0.7;
+      text-decoration: none;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      transition: color 0.3s ease, opacity 0.3s ease;
+    }
+
+    .topbar-nav a:hover {
+      opacity: 1;
+    }
+
+    .topbar-chat {
+      font-size: 14px;
+      font-weight: 600;
+      color: currentColor;
+      text-decoration: none;
+      letter-spacing: 0.5px;
+    }
+
+    .topbar-chat:hover { opacity: 0.8; }
+
+    /* =========================================
+       LEFT SIDE NAV INDICATOR
+       ========================================= */
+    .side-nav {
+      position: fixed;
+      left: clamp(22px, 3vw, 48px);
+      top: 42vh;
+      z-index: 9999;
+      display: grid;
+      gap: 6px;
+      color: rgba(255,255,255,0.5);
+      opacity: 0;
+      transform: translateX(-20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+      pointer-events: none;
+    }
+
+    .side-nav > * {
+      pointer-events: auto;
+    }
+
+    .side-nav.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .side-nav-number {
+      font-size: 11px;
+      font-weight: 300;
+      letter-spacing: 0.5px;
+      color: rgba(255,255,255,0.55);
+      transition: color 0.3s ease;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+
+    .side-nav-number.active {
+      color: var(--brand-blue);
+    }
+
+    .side-nav-line {
+      display: inline-block;
+      width: 34px;
+      height: 1px;
+      background: rgba(255,255,255,0.6);
+      vertical-align: middle;
+      margin-right: 12px;
+    }
+
+    .side-nav-label {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 13px;
+      font-style: italic;
+      color: var(--text-white);
+      margin-top: 8px;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+
+    .side-nav-label b {
+      font-family: 'Outfit', sans-serif;
+      font-style: normal;
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--text-white);
+    }
+
+    /* =========================================
+       PIN STACK (Hero + Why Bayin)
+       ========================================= */
+    .pin-stack {
+      min-height: 212svh;
+      position: relative;
+    }
+
+    /* =========================================
+       HERO SECTION
+       ========================================= */
+    .hero {
+      position: sticky;
+      top: 0;
+      width: 100%;
+      height: 100vh;
+      min-height: 700px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      z-index: 1;
+    }
+
+    .hero-gl {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      width: 100%;
+      height: 100%;
+      display: block;
+      pointer-events: none;
+    }
+
+    .hero-video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+      opacity: 1;
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 10;
+      padding: 0 60px;
+      max-width: 720px;
+      margin-top: auto;
+      margin-bottom: auto;
+      --text-brightness: 0;
+    }
+
+    .hero-title {
+      transition: text-shadow 0.4s ease, filter 0.4s ease, color 0.4s ease;
+      text-shadow: 0 0 calc(var(--text-brightness) * 28px) rgba(0,210,255,calc(var(--text-brightness) * 0.65)),
+                   0 0 calc(var(--text-brightness) * 56px) rgba(0,180,255,calc(var(--text-brightness) * 0.35)),
+                   0 0 calc(var(--text-brightness) * 90px) rgba(0,150,255,calc(var(--text-brightness) * 0.18));
+      filter: brightness(calc(1 + var(--text-brightness) * 0.35));
+      color: rgba(255,255,255,calc(0.88 + var(--text-brightness) * 0.12));
+    }
+
+    .hero-subtitle {
+      transition: text-shadow 0.4s ease, filter 0.4s ease, color 0.4s ease;
+      text-shadow: 0 0 calc(var(--text-brightness) * 20px) rgba(0,200,255,calc(var(--text-brightness) * 0.50)),
+                   0 0 calc(var(--text-brightness) * 40px) rgba(0,170,255,calc(var(--text-brightness) * 0.25));
+      filter: brightness(calc(1 + var(--text-brightness) * 0.25));
+      color: rgba(255,255,255,calc(0.82 + var(--text-brightness) * 0.18));
+    }
+
+    .hero-label-text, .hero-cta-text {
+      transition: text-shadow 0.4s ease, filter 0.4s ease, color 0.4s ease;
+      text-shadow: 0 0 calc(var(--text-brightness) * 16px) rgba(0,190,255,calc(var(--text-brightness) * 0.45)),
+                   0 0 calc(var(--text-brightness) * 32px) rgba(0,160,255,calc(var(--text-brightness) * 0.22));
+      filter: brightness(calc(1 + var(--text-brightness) * 0.20));
+      color: rgba(255,255,255,calc(0.80 + var(--text-brightness) * 0.20));
+    }
+
+    .hero-label-line {
+      transition: box-shadow 0.4s ease, filter 0.4s ease;
+      box-shadow: 0 0 calc(var(--text-brightness) * 14px + 8px) rgba(0,149,255,calc(var(--text-brightness) * 0.45 + 0.6));
+      filter: brightness(calc(1 + var(--text-brightness) * 0.3));
+    }
+
+    .hero-label {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.8s 0.3s ease forwards;
+    }
+
+    .hero-label-line {
+      width: 40px;
+      height: 1px;
+      background: var(--brand-blue);
+      box-shadow: 0 0 8px rgba(0,149,255,0.6);
+    }
+
+    .hero-label-text {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #aabbcc;
+    }
+
+    .hero-title {
+      font-size: 72px;
+      font-weight: 300;
+      line-height: 1.1;
+      letter-spacing: -2px;
+      color: var(--text-white);
+      margin-bottom: 24px;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeInUp 0.8s 0.5s ease forwards;
+    }
+
+    .hero-title span { font-weight: 400; }
+
+    .hero-subtitle {
+      font-size: 16px;
+      font-weight: 300;
+      line-height: 1.8;
+      color: var(--text-gray);
+      max-width: 440px;
+      margin-bottom: 48px;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.8s 0.7s ease forwards;
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 16px;
+      cursor: pointer;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.8s 0.9s ease forwards;
+    }
+
+    .hero-cta-btn {
+      width: 48px;
+      height: 48px;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.4s ease;
+      background: rgba(255,255,255,0.03);
+      backdrop-filter: blur(4px);
+    }
+
+    .hero-cta:hover .hero-cta-btn {
+      border-color: var(--brand-blue);
+      box-shadow: 0 0 30px rgba(0,149,255,0.3), inset 0 0 20px rgba(0,149,255,0.05);
+      background: rgba(0,149,255,0.05);
+    }
+
+    .hero-cta-btn svg {
+      width: 14px;
+      height: 14px;
+      fill: var(--text-white);
+      transition: transform 0.3s ease;
+    }
+
+    .hero-cta:hover .hero-cta-btn svg { transform: scale(1.1); }
+
+    .hero-cta-text {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: #aabbcc;
+      transition: color 0.3s ease;
+    }
+
+    .hero-cta:hover .hero-cta-text { color: var(--text-white); }
+
+    .hero-cta-arrow {
+      margin-left: 8px;
+      width: 40px;
+      height: 1px;
+      background: rgba(255,255,255,0.2);
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .hero-cta-arrow::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: -2.5px;
+      width: 6px;
+      height: 6px;
+      border-top: 1px solid rgba(255,255,255,0.2);
+      border-right: 1px solid rgba(255,255,255,0.2);
+      transform: rotate(45deg);
+      transition: all 0.3s ease;
+    }
+
+    .hero-cta:hover .hero-cta-arrow { background: var(--brand-blue); width: 50px; }
+    .hero-cta:hover .hero-cta-arrow::after { border-color: var(--brand-blue); }
+
+    .hero-footer {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 32px 60px;
+    }
+
+    .hero-scroll {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      cursor: pointer;
+      opacity: 0;
+      animation: fadeInUp 0.8s 1.1s ease forwards;
+    }
+
+    .hero-scroll-icon {
+      width: 24px;
+      height: 40px;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 12px;
+      display: flex;
+      justify-content: center;
+      padding-top: 8px;
+      position: relative;
+    }
+
+    .hero-scroll-icon::after {
+      content: '';
+      width: 3px;
+      height: 8px;
+      background: var(--text-white);
+      border-radius: 2px;
+      animation: scrollDot 2s ease-in-out infinite;
+    }
+
+    @keyframes scrollDot {
+      0%, 100% { opacity: 1; transform: translateY(0); }
+      50% { opacity: 0.3; transform: translateY(8px); }
+    }
+
+    .hero-scroll-text {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--text-gray);
+    }
+
+
+
+    /* =========================================
+       SECTION 2: WHY BAYIN — Brunocis scroll style
+       ========================================= */
+    .why-section {
+      min-height: 320svh;
+      position: relative;
+      z-index: 2;
+      background: linear-gradient(180deg, #02040a 0%, #ffffff 30%, #ffffff 100%);
+    }
+
+    .why-section::before {
+      content: "";
+      background: var(--brand-blue);
+      height: 10px;
+      left: 0;
+      position: absolute;
+      right: 0;
+      top: 0;
+      z-index: 3;
+    }
+
+    .why-sticky {
+      align-items: center;
+      display: grid;
+      min-height: 100svh;
+      overflow: hidden;
+      padding: clamp(96px, 12vw, 156px) clamp(22px, 5.4vw, 82px) clamp(52px, 7vw, 94px);
+      position: sticky;
+      top: 0;
+    }
+
+    .why-sticky::after {
+      background:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.96), transparent 24%, transparent 78%, rgba(255, 255, 255, 0.68)),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.96), transparent 24%, transparent 74%, rgba(255, 255, 255, 0.9));
+      content: "";
+      inset: 0;
+      pointer-events: none;
+      position: absolute;
+      z-index: 1;
+    }
+
+    .why-inner {
+      display: grid;
+      gap: clamp(34px, 7vw, 92px);
+      max-width: 1340px;
+      position: relative;
+      width: 100%;
+      z-index: 2;
+    }
+
+    .why-kicker {
+      color: var(--brand-blue);
+      font-size: clamp(16px, 1.55vw, 25px);
+      font-weight: 600;
+      letter-spacing: 0.28em;
+      margin: 0;
+      text-transform: uppercase;
+    }
+
+    .why-headline {
+      font-weight: 700;
+      letter-spacing: 0;
+      margin: 0;
+      font-size: clamp(42px, 6.5vw, 96px);
+      line-height: 0.95;
+      max-width: 1280px;
+      color: #0a1628;
+    }
+
+    .read-word {
+      color: color-mix(in srgb, #b0c4de, var(--brand-blue) var(--mix, 0%));
+      display: inline-block;
+      padding-right: 0.12em;
+      transition:
+        color 140ms linear,
+        opacity 140ms linear,
+        text-shadow 140ms linear,
+        transform 140ms linear;
+    }
+
+    .read-word.is-read {
+      color: var(--brand-blue);
+    }
+
+    .read-word.is-current {
+      text-shadow: 0 0 28px rgba(51, 154, 236, 0.42);
+      transform: translateY(-0.015em);
+    }
+
+    .why-subcopy {
+      color: color-mix(in srgb, #5a7a9a, white 8%);
+      font-size: clamp(17px, 1.45vw, 22px);
+      font-weight: 400;
+      line-height: 1.56;
+      margin: 0;
+      max-width: 640px;
+    }
+
+    .why-bayin-logo {
+      height: 1em;
+      width: auto;
+      vertical-align: baseline;
+      display: inline-block;
+      margin: 0 0.04em;
+      transform: translateY(0.05em);
+    }
+
+    .read-word.bayin-logo-word {
+      padding-right: 0;
+    }
+
+    /* =========================================
+       SECTION 3: ECOSYSTEM — Wheel (fromanother copy)
+       ========================================= */
+    .eco-section {
+      height: 330svh;
+      position: relative;
+      z-index: 3;
+    }
+
+    .eco-sticky {
+      height: 100svh;
+      overflow: hidden;
+      position: sticky;
+      top: 0;
+      background: linear-gradient(180deg, #0a1e3a 0%, #071b44 50%, #0d2048 100%);
+    }
+
+    .eco-sticky::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle, rgba(51, 154, 236, 0.16), transparent 62%),
+        radial-gradient(circle, rgba(51, 154, 236, 0.09), transparent 70%);
+      filter: blur(4px);
+      height: 72vw;
+      left: 12vw;
+      max-height: 940px;
+      max-width: 940px;
+      min-height: 620px;
+      min-width: 620px;
+      opacity: 0.62;
+      position: absolute;
+      top: -20vw;
+      width: 72vw;
+      animation: ecoGlowPulse 6s ease-in-out infinite alternate;
+    }
+
+    @keyframes ecoGlowPulse {
+      0% { opacity: 0.3; transform: scale(0.95); }
+      100% { opacity: 0.8; transform: scale(1.05); }
+    }
+
+    .eco-meta {
+      color: rgba(255, 255, 255, 0.5);
+      display: grid;
+      gap: 6px;
+      left: clamp(22px, 3vw, 48px);
+      position: absolute;
+      top: 42vh;
+      z-index: 4;
+    }
+
+    .eco-meta .slide-count {
+      font-size: 12px;
+      font-weight: 850;
+      letter-spacing: 0.04em;
+      margin: 0;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .eco-meta span {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 13px;
+      font-style: italic;
+    }
+
+    .eco-meta b {
+      color: var(--text-white);
+      font-size: 14px;
+      font-weight: 780;
+    }
+
+    .eco-meta .line {
+      background: rgba(255, 255, 255, 0.6);
+      display: inline-block;
+      height: 1px;
+      margin-right: 12px;
+      vertical-align: middle;
+      width: 34px;
+    }
+
+    .eco-stage {
+      inset: 0;
+      position: absolute;
+    }
+
+    .eco-arc {
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 50%;
+      height: 72vw;
+      left: 5vw;
+      max-height: 940px;
+      max-width: 940px;
+      min-height: 620px;
+      min-width: 620px;
+      opacity: 0.75;
+      position: absolute;
+      top: -16vw;
+      transform: rotate(-18deg);
+      width: 72vw;
+    }
+
+    .eco-word {
+      color: rgba(255, 255, 255, var(--alpha, 0.22));
+      filter: blur(var(--blur, 0));
+      font-size: clamp(32px, 4.5vw, 80px);
+      font-weight: 700;
+      left: 0;
+      line-height: 0.88;
+      max-width: 55vw;
+      position: absolute;
+      text-wrap: balance;
+      top: 0;
+      transform:
+        translate3d(var(--x, 18vw), var(--y, 50vh), 0)
+        rotate(var(--r, -12deg))
+        scale(var(--scale, 0.72));
+      transform-origin: left center;
+      transition:
+        color 180ms linear,
+        opacity 180ms linear,
+        filter 180ms linear;
+      white-space: nowrap;
+      will-change: transform;
+      cursor: pointer;
+    }
+
+    .eco-word.is-active {
+      color: var(--text-white);
+      text-shadow: 0 0 28px rgba(255, 255, 255, 0.22);
+    }
+
+    .eco-word:hover {
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .eco-copy {
+      display: grid;
+      gap: 18px;
+      position: absolute;
+      right: clamp(22px, 7vw, 130px);
+      top: 51vh;
+      transform: translateY(-50%);
+      width: min(39vw, 620px);
+      z-index: 5;
+    }
+
+    .eco-copy .section-note {
+      font-size: 12px;
+      font-weight: 850;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--brand-blue);
+      margin: 0;
+    }
+
+    .eco-copy h2 {
+      font-size: clamp(30px, 4.4vw, 74px);
+      line-height: 0.95;
+      margin: 0;
+      color: var(--text-white);
+      font-weight: 700;
+      letter-spacing: -2px;
+    }
+
+    .eco-copy p {
+      color: rgba(255, 255, 255, 0.68);
+      font-size: clamp(16px, 1.45vw, 22px);
+      font-weight: 400;
+      line-height: 1.55;
+      margin: 0;
+      max-width: 520px;
+    }
+
+    /* =========================================
+       SECTION 4: BRANDS — Horizontal Lock
+       ========================================= */
+    .brand-section {
+      min-height: 250svh;
+      position: relative;
+      z-index: 4;
+      background: #f1f1f1;
+    }
+
+    .brand-sticky {
+      height: 100svh;
+      overflow: hidden;
+      position: sticky;
+      top: 0;
+    }
+
+    .brand-heading {
+      display: grid;
+      gap: 12px;
+      left: clamp(22px, 5vw, 86px);
+      max-width: 520px;
+      position: absolute;
+      top: 2vh;
+      z-index: 2;
+    }
+
+    .brand-heading .eyebrow {
+      font-size: 12px;
+      font-weight: 850;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--brand-blue);
+      margin: 0;
+    }
+
+    .brand-heading h2 {
+      font-size: clamp(44px, 7vw, 110px);
+      font-weight: 900;
+      letter-spacing: 0;
+      line-height: 0.86;
+      margin: 0;
+      color: #0a1628;
+    }
+
+    .brand-heading p {
+      color: rgba(10, 22, 40, 0.66);
+      font-size: clamp(15px, 1.3vw, 18px);
+      font-weight: 400;
+      line-height: 1.56;
+      margin: 0;
+    }
+
+    .brand-track {
+      align-items: end;
+      display: flex;
+      gap: clamp(22px, 4vw, 70px);
+      height: 100%;
+      padding: 48vh clamp(28px, 5vw, 88px) 13vh;
+      transform: translate3d(0, 0, 0);
+      will-change: transform;
+    }
+
+    .brand-card {
+      aspect-ratio: 0.7;
+      background-image: var(--card-img);
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.3);
+      color: var(--text-white);
+      display: grid;
+      flex: 0 0 clamp(196px, 19vw, 344px);
+      grid-template-rows: 1fr auto;
+      overflow: hidden;
+      padding: clamp(20px, 2.2vw, 34px);
+      position: relative;
+      transform: rotate(var(--tilt, 0deg));
+      text-decoration: none;
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+      cursor: pointer;
+    }
+
+    .brand-card::before {
+      content: "";
+      position: absolute;
+      background: radial-gradient(circle at 40% 30%, rgba(51, 154, 236, 0.3), transparent 52%);
+      filter: blur(18px);
+      inset: 18%;
+      opacity: 0.85;
+      transform: rotate(-12deg);
+    }
+
+    .brand-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(2,4,10,0.2) 0%, rgba(2,4,10,0.4) 100%);
+      opacity: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .brand-card:hover {
+      transform: rotate(var(--tilt, 0deg)) translateY(-12px) scale(1.02);
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.2);
+      filter: brightness(1.15);
+    }
+
+    .brand-card p {
+      position: relative;
+      z-index: 1;
+      font-size: 13px;
+      font-weight: 400;
+      line-height: 1.35;
+      margin: 0;
+      max-width: 210px;
+      opacity: 0.8;
+      color: var(--text-gray);
+    }
+
+    /* =========================================
+       SECTION 5: GLOBAL PRESENCE
+       ========================================= */
+    .global-section {
+      position: relative;
+      padding: 140px 60px;
+      background: #ffffff;
+      overflow: hidden;
+      z-index: 5;
+    }
+
+    .global-bg {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 80% 50% at 50% 50%, rgba(51, 154, 236, 0.06) 0%, transparent 70%);
+      animation: globalPulse 8s ease-in-out infinite alternate;
+    }
+
+    @keyframes globalPulse {
+      0% { opacity: 0.6; transform: scale(1); }
+      100% { opacity: 1; transform: scale(1.05); }
+    }
+
+    .global-content {
+      position: relative;
+      z-index: 2;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .global-header {
+      text-align: center;
+      margin-bottom: 80px;
+    }
+
+    .global-title {
+      font-size: clamp(36px, 5vw, 56px);
+      font-weight: 300;
+      line-height: 1.1;
+      letter-spacing: -2px;
+      color: #0a1628;
+      margin-bottom: 20px;
+    }
+
+    .global-subtitle {
+      font-size: 16px;
+      font-weight: 300;
+      line-height: 1.7;
+      color: #5a7a9a;
+      max-width: 560px;
+      margin: 0 auto;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 32px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .stat-card {
+      text-align: center;
+      padding: 40px 24px;
+      position: relative;
+      transition: all 0.4s ease;
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 20px;
+      background: rgba(10, 22, 40, 0.02);
+      border: 1px solid rgba(10, 22, 40, 0.06);
+      transition: all 0.4s ease;
+    }
+
+    .stat-card:hover::before {
+      background: rgba(51, 154, 236, 0.04);
+      border-color: rgba(51, 154, 236, 0.15);
+      box-shadow: 0 10px 40px rgba(51, 154, 236, 0.08);
+    }
+
+    .stat-number {
+      font-size: 56px;
+      font-weight: 200;
+      line-height: 1;
+      color: var(--brand-blue);
+      margin-bottom: 12px;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -2px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .stat-suffix {
+      font-size: 32px;
+      font-weight: 300;
+    }
+
+    .stat-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #0a1628;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      position: relative;
+      z-index: 1;
+    }
+
+    .stat-desc {
+      font-size: 12px;
+      color: #5a7a9a;
+      margin-top: 4px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* =========================================
+       JOIN SECTION
+       ========================================= */
+    .join-section {
+      position: relative;
+      min-height: 80vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      z-index: 6;
+      background: #f8fafc;
+    }
+
+    .join-gradient {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 40%, rgba(51, 154, 236, 0.08) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 80% at 30% 70%, rgba(0, 80, 180, 0.05) 0%, transparent 50%),
+        radial-gradient(ellipse 50% 50% at 70% 60%, rgba(0, 200, 255, 0.04) 0%, transparent 50%),
+        linear-gradient(180deg, #f8fafc 0%, #ffffff 30%, #f0f4f8 60%, #f8fafc 100%);
+      animation: joinGradientMove 10s ease-in-out infinite alternate;
+    }
+
+    @keyframes joinGradientMove {
+      0% { transform: translateX(0) translateY(0) scale(1); filter: hue-rotate(0deg); }
+      100% { transform: translateX(-20px) translateY(-10px) scale(1.02); filter: hue-rotate(5deg); }
+    }
+
+    .join-noise {
+      position: absolute;
+      inset: 0;
+      opacity: 0.02;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+
+    .join-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      padding: 100px 60px;
+      max-width: 800px;
+    }
+
+    .join-eyebrow {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--brand-blue);
+      margin-bottom: 32px;
+      display: block;
+    }
+
+    .join-title {
+      font-size: clamp(36px, 5vw, 56px);
+      font-weight: 300;
+      line-height: 1.1;
+      letter-spacing: -2px;
+      color: #0a1628;
+      margin-bottom: 28px;
+    }
+
+    .join-body {
+      font-size: 16px;
+      font-weight: 300;
+      line-height: 1.9;
+      color: #5a7a9a;
+      max-width: 520px;
+      margin: 0 auto 48px;
+    }
+
+    .join-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 36px;
+      background: rgba(51, 154, 236, 0.08);
+      border: 1px solid rgba(51, 154, 236, 0.3);
+      border-radius: 100px;
+      color: #0a1628;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: all 0.4s ease;
+      cursor: pointer;
+    }
+
+    .join-cta:hover {
+      background: rgba(51, 154, 236, 0.15);
+      border-color: var(--brand-blue);
+      box-shadow: 0 0 40px rgba(51, 154, 236, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .join-cta svg {
+      width: 16px;
+      height: 16px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      transition: transform 0.3s ease;
+    }
+
+    .join-cta:hover svg {
+      transform: translateX(4px);
+    }
+
+    /* =========================================
+       FOOTER — Light style
+       ========================================= */
+    .footer {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      overflow: hidden;
+      z-index: 7;
+      background: #ffffff;
+    }
+
+    .footer-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background: url('footer-bg-light.png') center center / cover no-repeat;
+      opacity: 0.6;
+    }
+
+    .footer-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0.8) 100%);
+    }
+
+    .footer-content {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 1200px;
+      padding: 120px 60px 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      gap: 60px;
+    }
+
+    .footer-left {
+      max-width: 600px;
+    }
+
+    .footer-title {
+      font-size: clamp(36px, 5vw, 64px);
+      font-weight: 300;
+      line-height: 1.1;
+      letter-spacing: -2px;
+      color: #0a1628;
+      margin-bottom: 40px;
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .footer-title.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .footer-contact-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #5a7a9a;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .footer-contact-email {
+      font-size: clamp(20px, 3vw, 32px);
+      font-weight: 300;
+      color: #0a1628;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(10,22,40,0.15);
+      padding-bottom: 4px;
+      transition: border-color 0.3s ease;
+      display: inline-block;
+    }
+
+    .footer-contact-email:hover {
+      border-color: var(--brand-blue);
+    }
+
+    .footer-right {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+      align-items: flex-start;
+    }
+
+    .footer-link-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .footer-link-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #5a7a9a;
+      margin-bottom: 4px;
+    }
+
+    .footer-link {
+      font-size: 16px;
+      font-weight: 300;
+      color: #0a1628;
+      text-decoration: none;
+      transition: color 0.3s ease;
+      border-bottom: 1px solid rgba(10,22,40,0.15);
+      padding-bottom: 2px;
+      display: inline-block;
+    }
+
+    .footer-link:hover {
+      color: var(--brand-blue);
+      border-color: var(--brand-blue);
+    }
+
+    .footer-socials {
+      display: flex;
+      gap: 24px;
+      margin-top: 20px;
+    }
+
+    .footer-socials a {
+      font-size: 14px;
+      font-weight: 500;
+      color: #5a7a9a;
+      text-decoration: none;
+      transition: color 0.3s ease;
+      letter-spacing: 0.5px;
+    }
+
+    .footer-socials a:hover {
+      color: var(--brand-blue);
+    }
+
+    .footer-bottom-bar {
+      position: absolute;
+      bottom: 32px;
+      left: 60px;
+      right: 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: rgba(10,22,40,0.25);
+      z-index: 2;
+    }
+
+    .footer-scroll-top {
+      width: 40px;
+      height: 40px;
+      border: 1px solid rgba(10,22,40,0.15);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      color: #0a1628;
+      text-decoration: none;
+    }
+
+    .footer-scroll-top:hover {
+      border-color: var(--brand-blue);
+      color: var(--brand-blue);
+      transform: translateY(-4px);
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .hero-title { font-size: 52px; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .eco-copy { display: none; }
+      .eco-arc { display: none; }
+      .brand-card { flex: 0 0 min(74vw, 330px); }
+    }
+
+    @media (max-width: 768px) {
+      .topbar { padding: 20px 24px; grid-template-columns: auto 1fr; }
+      .topbar.scrolled { padding: 12px 24px; }
+      .topbar-wordmark { justify-self: end; }
+      .topbar-chat { display: none; }
+      .hero-content { padding: 0 24px; }
+      .hero-title { font-size: 40px; }
+      .hero-footer { padding: 24px; }
+      .why-content { padding: 0 24px; }
+      .brand-heading { left: 24px; }
+      .brand-track { padding: 36vh 24px 11vh; }
+      .global-section { padding: 80px 24px; }
+      .stats-grid { grid-template-columns: 1fr 1fr; gap: 16px; }
+      .stat-number { font-size: 40px; }
+      .join-content { padding: 60px 24px; }
+      .footer-content { padding: 80px 24px 40px; }
+      .footer-bottom-bar { left: 24px; right: 24px; }
+      .side-nav { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- =========================================
+     FIXED TOPBAR
+     ========================================= -->
+<header class="topbar" id="topbar">
+  <a class="topbar-menu" href="#" id="topbarMenu">
+    <span class="menu-icon" aria-hidden="true"><span></span><span></span></span>
+    Menu
+  </a>
+  <a class="topbar-wordmark" href="#hero">
+    <img class="logo-icon" src="图形-蓝-2.png" alt="">
+    <img class="logo-text" src="英文-白-2.png" alt="Bayin">
+  </a>
+  <div class="topbar-nav">
+    <a href="#whySection">Our World</a>
+    <a href="#brandSection">Brands</a>
+    <a href="#partner">Partner With Us</a>
+    <a href="#contact">Contact</a>
+  </div>
+</header>
+
+<!-- =========================================
+     LEFT SIDE NAV INDICATOR
+     ========================================= -->
+<nav class="side-nav" id="sideNav">
+  <div class="side-nav-number" data-section="1">1</div>
+  <div class="side-nav-number" data-section="2">2</div>
+  <div class="side-nav-number" data-section="3">3</div>
+  <div class="side-nav-number" data-section="4">4</div>
+  <div class="side-nav-number" data-section="5">5</div>
+  <div class="side-nav-number" data-section="6">6</div>
+  <div class="side-nav-number" data-section="7">7</div>
+  <div class="side-nav-line"></div>
+  <span class="side-nav-label"><b id="sideNavLabel">Why Bayin</b></span>
+</nav>
+
+<!-- =========================================
+     HERO SECTION
+     ========================================= -->
+<div class="pin-stack">
+<section class="hero" id="hero">
+  <video class="hero-video" id="heroVideo" autoplay loop muted playsinline preload="auto">
+    <source src="ocean.mp4" type="video/mp4">
+  </video>
+  <canvas class="hero-gl" id="heroGl"></canvas>
+
+  <div class="hero-content">
+    <div class="hero-label">
+      <div class="hero-label-line"></div>
+      <span class="hero-label-text">Global Brand Ecosystem</span>
+    </div>
+    <h1 class="hero-title">Build Global Brands.<br><span>Grow Together.</span></h1>
+    <p class="hero-subtitle">
+      Bayin transforms ideas into global brands through an integrated ecosystem of innovation, creativity, manufacturing and worldwide operations.
+    </p>
+    <div class="hero-cta">
+      <div class="hero-cta-btn">
+        <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+      </div>
+      <span class="hero-cta-text">Explore Bayin</span>
+      <div class="hero-cta-arrow"></div>
+    </div>
+  </div>
+
+  <div class="hero-footer">
+    <div class="hero-scroll" onclick="document.getElementById('whySection').scrollIntoView({behavior:'smooth'})">
+      <div class="hero-scroll-icon"></div>
+      <span class="hero-scroll-text">Scroll to Explore</span>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================
+     SECTION 2: WHY BAYIN — Brunocis scroll style
+     ========================================= -->
+<section class="why-section" id="whySection" data-reading-section>
+  <div class="why-sticky">
+    <div class="why-inner">
+      <p class="why-kicker">WHY BAYIN</p>
+      <h2 class="why-headline" data-reading-text>
+        A Platform Built For Brand Growth. Bayin connects product innovation, supply chain strength, digital channels and global creative direction into one ecosystem, helping beauty brands move faster, look sharper, and grow with consistency.
+      </h2>
+      <p class="why-subcopy">
+        Every successful brand needs more than great products. It needs vision, innovation, execution, and global reach. Bayin brings every stage of brand growth into one connected ecosystem.
+      </p>
+    </div>
+  </div>
+</section>
+</div>
+
+<!-- =========================================
+     SECTION 3: ECOSYSTEM — Wheel (fromanother copy)
+     ========================================= -->
+<section class="eco-section" id="ecoSection" data-wheel-section>
+  <div class="eco-sticky">
+    <div class="eco-meta">
+      <p class="slide-count" data-wheel-count>1 / 12</p>
+      <span><i class="line"></i> <b>Our Ecosystem</b></span>
+    </div>
+
+    <div class="eco-stage" aria-label="Circular ecosystem wheel">
+      <div class="eco-arc" aria-hidden="true"></div>
+      <span class="eco-word" data-href="brand-strategy.html">Brand Strategy</span>
+      <span class="eco-word" data-href="creative-design.html">Creative Design</span>
+      <span class="eco-word" data-href="product-innovation.html">Product Innovation</span>
+      <span class="eco-word" data-href="manufacturing.html">Manufacturing</span>
+      <span class="eco-word" data-href="supply-chain.html">Supply Chain</span>
+      <span class="eco-word" data-href="digital-commerce.html">Digital Commerce</span>
+      <span class="eco-word" data-href="global-operations.html">Global Operations</span>
+      <span class="eco-word" data-href="market-growth.html">Market Growth</span>
+      <span class="eco-word" data-href="consumer-insights.html">Consumer Insights</span>
+      <span class="eco-word" data-href="localization.html">Localization</span>
+      <span class="eco-word" data-href="quality-assurance.html">Quality Assurance</span>
+      <span class="eco-word" data-href="brand-identity.html">Brand Identity</span>
+    </div>
+
+    <div class="eco-copy">
+      <p class="section-note">Our Ecosystem</p>
+      <h2 data-wheel-title>Brand Strategy.</h2>
+      <p data-wheel-body>
+        From vision to positioning, we craft the strategic foundation that guides every brand decision.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================
+     SECTION 4: BRANDS — Horizontal Lock (fromanother copy)
+     ========================================= -->
+<section class="brand-section" id="brandSection" data-horizontal-section>
+  <div class="brand-sticky">
+    <div class="brand-heading">
+      <p class="eyebrow">Many visions, one ecosystem.</p>
+      <h2><span style="font-weight:700;">Brand</span> <span style="font-weight:400;">Showcase</span></h2>
+      <p>Every brand within Bayin represents a unique vision, supported by one shared ecosystem.</p>
+    </div>
+
+    <div class="brand-track" data-poster-track>
+      <a href="sace-lady.html" class="brand-card" style="--tilt:-8deg; --card-img: url('sacelady-2.png');"></a>
+
+      <a href="minimeli.html" class="brand-card" style="--tilt:4deg; --card-img: url('minimeli-2.png');"></a>
+
+      <a href="luminlash.html" class="brand-card" style="--tilt:0deg; --card-img: url('luminlash-2.png');"></a>
+
+      <a href="purfrais.html" class="brand-card" style="--tilt:8deg; --card-img: url('purfrais-2.png');"></a>
+
+      <a href="timmi.html" class="brand-card" style="--tilt:-3deg; --card-img: url('timmi-2.png');"></a>
+
+      <a href="freshmile.html" class="brand-card" style="--tilt:6deg; --card-img: url('freshmile-2.png');"></a>
+
+      <a href="verdora.html" class="brand-card" style="--tilt:-5deg; --card-img: url('verdora-2.png');"></a>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================
+     SECTION 5: GLOBAL PRESENCE
+     ========================================= -->
+<section class="global-section" id="global">
+  <div class="global-bg"></div>
+  <div class="global-content">
+    <div class="global-header">
+      <span class="brand-eyebrow" style="display:block;margin-bottom:24px;">Global Presence</span>
+      <h2 class="global-title">Growing Across The World.</h2>
+      <p class="global-subtitle">
+        Our brands reach consumers across continents, supported by localized operations and global partnerships.
+      </p>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-number"><span class="counter" data-target="100">0</span><span class="stat-suffix">+</span></div>
+        <div class="stat-label">Markets</div>
+        <div class="stat-desc">Worldwide</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number"><span class="counter" data-target="10">0</span><span class="stat-suffix">M+</span></div>
+        <div class="stat-label">Consumers</div>
+        <div class="stat-desc">And Growing</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number"><span class="counter" data-target="8">0</span><span class="stat-suffix">+</span></div>
+        <div class="stat-label">Brands</div>
+        <div class="stat-desc">Beauty & Care</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number"><span class="counter" data-target="30">0</span><span class="stat-suffix">+</span></div>
+        <div class="stat-label">Awards</div>
+        <div class="stat-desc">Industry Recognition</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================
+     SECTION 6: JOIN
+     ========================================= -->
+<section class="join-section" id="partner">
+  <div class="join-gradient"></div>
+  <div class="join-noise"></div>
+  <div class="join-content">
+    <span class="join-eyebrow">Join The Ecosystem</span>
+    <h2 class="join-title">Build The Future Together.</h2>
+    <p class="join-body">
+      Whether you're expanding your business, launching a new brand, or entering new markets — Bayin is ready to grow with you.
+    </p>
+    <a href="#contact" class="join-cta">
+      <span>Become A Partner</span>
+      <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+  </div>
+</section>
+
+<!-- =========================================
+     FOOTER — Image background + scroll reveal
+     ========================================= -->
+<footer class="footer" id="contact">
+  <div class="footer-bg"></div>
+  <div class="footer-content">
+    <div class="footer-left">
+      <h2 class="footer-title" id="footerTitle">Bayin together<br>Ahead together</h2>
+      <span class="footer-contact-label">Contact</span>
+      <a href="mailto:contact@bayingroup.com" class="footer-contact-email">contact@bayingroup.com</a>
+    </div>
+    <div class="footer-right">
+      <div class="footer-link-group">
+        <span class="footer-link-label">Follow</span>
+        <div class="footer-socials">
+          <a href="#">LinkedIn</a>
+          <a href="#">Instagram</a>
+          <a href="#">Facebook</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom-bar">
+    <span>© 2025 Bayin. All rights reserved.</span>
+    <a href="#" class="footer-scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>
+    </a>
+  </div>
+</footer>
+
+<script>
+// =========================================
+// CANVAS 2D LIGHT FIELD — Hero (destination-out + lighter)
+// =========================================
+(function() {
+  const video = document.getElementById('heroVideo');
+  const canvas = document.getElementById('heroGl');
+  if (!canvas) return;
+
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+
+  let width = 0, height = 0;
+  let time = 0;
+
+  const mouse = { x: 0.5, y: 0.5, active: false };
+  const light = { x: 0.5, y: 0.5 };
+  const lightHistory = [];
+  const MAX_HISTORY = 10;
+
+  const heroContent = document.querySelector('.hero-content');
+  let textRect = null;
+
+  function resize() {
+    width = window.innerWidth;
+    height = window.innerHeight;
+    canvas.width = width;
+    canvas.height = height;
+    if (heroContent) {
+      const r = heroContent.getBoundingClientRect();
+      textRect = { x: r.left, y: r.top, w: r.width, h: r.height, cx: r.left + r.width/2, cy: r.top + r.height/2 };
+    }
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  window.addEventListener('mousemove', (e) => {
+    mouse.x = e.clientX / width;
+    mouse.y = e.clientY / height;
+    mouse.active = true;
+  });
+
+  window.addEventListener('mouseout', (e) => {
+    if (!e.relatedTarget) mouse.active = false;
+  });
+
+  video.muted = true;
+  video.loop = true;
+  function tryPlay() {
+    if (video.paused) video.play().catch(() => {});
+  }
+  tryPlay();
+  setInterval(tryPlay, 500);
+
+  function draw() {
+    requestAnimationFrame(draw);
+    time++;
+    const t = time * 0.015;
+
+    if (mouse.active) {
+      light.x += (mouse.x - light.x) * 0.08;
+      light.y += (mouse.y - light.y) * 0.08;
+      lightHistory.push({ x: light.x * width, y: light.y * height, time: Date.now() });
+      if (lightHistory.length > MAX_HISTORY) lightHistory.shift();
+    } else {
+      light.x += (0.5 - light.x) * 0.02;
+      light.y += (0.5 - light.y) * 0.02;
+      if (lightHistory.length > 0) lightHistory.shift();
+    }
+
+    const gx = light.x * width;
+    const gy = light.y * height;
+
+    ctx.clearRect(0, 0, width, height);
+
+    // Dark base
+    ctx.fillStyle = 'rgba(1, 3, 8, 0.85)';
+    ctx.fillRect(0, 0, width, height);
+
+    // Dim glow when no mouse
+    if (!mouse.active && lightHistory.length === 0) {
+      ctx.save();
+      ctx.globalCompositeOperation = 'lighter';
+      const dimGlow = ctx.createRadialGradient(width/2, height/2, 0, width/2, height/2, Math.max(width, height) * 0.35);
+      dimGlow.addColorStop(0, 'rgba(0, 50, 100, 0.035)');
+      dimGlow.addColorStop(1, 'rgba(0, 0, 0, 0)');
+      ctx.fillStyle = dimGlow;
+      ctx.fillRect(0, 0, width, height);
+      ctx.restore();
+    }
+
+    // === destination-out: erase dark where light is ===
+    ctx.save();
+    ctx.globalCompositeOperation = 'destination-out';
+
+    const baseR = 420;
+
+    const gMain = ctx.createRadialGradient(gx, gy, 0, gx, gy, baseR);
+    gMain.addColorStop(0, 'rgba(0,0,0,0.98)');
+    gMain.addColorStop(0.06, 'rgba(0,0,0,0.95)');
+    gMain.addColorStop(0.18, 'rgba(0,0,0,0.82)');
+    gMain.addColorStop(0.38, 'rgba(0,0,0,0.55)');
+    gMain.addColorStop(0.62, 'rgba(0,0,0,0.25)');
+    gMain.addColorStop(0.85, 'rgba(0,0,0,0.08)');
+    gMain.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = gMain;
+    ctx.fillRect(0, 0, width, height);
+
+    const ox1 = Math.sin(t * 1.3) * 40 + Math.cos(t * 0.7) * 20;
+    const oy1 = Math.cos(t * 0.9) * 30 + Math.sin(t * 1.7) * 15;
+    const gSub1 = ctx.createRadialGradient(gx + ox1, gy + oy1, 0, gx + ox1, gy + oy1, baseR * 0.7);
+    gSub1.addColorStop(0, 'rgba(0,0,0,0.60)');
+    gSub1.addColorStop(0.35, 'rgba(0,0,0,0.28)');
+    gSub1.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = gSub1;
+    ctx.fillRect(0, 0, width, height);
+
+    const ox2 = Math.cos(t * 1.1) * -28 + Math.sin(t * 0.5) * 22;
+    const oy2 = Math.sin(t * 0.8) * 25 + Math.cos(t * 1.4) * -18;
+    const gSub2 = ctx.createRadialGradient(gx + ox2, gy + oy2, 0, gx + ox2, gy + oy2, baseR * 0.55);
+    gSub2.addColorStop(0, 'rgba(0,0,0,0.40)');
+    gSub2.addColorStop(0.4, 'rgba(0,0,0,0.18)');
+    gSub2.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = gSub2;
+    ctx.fillRect(0, 0, width, height);
+
+    for (let i = 0; i < lightHistory.length; i++) {
+      const pos = lightHistory[i];
+      const age = (Date.now() - pos.time) / 280;
+      const alpha = Math.max(0, 1 - age) * 0.45;
+      if (alpha <= 0) continue;
+      const decay = i / lightHistory.length;
+      const tr = 140 * (0.4 + decay * 0.6);
+      const tGrad = ctx.createRadialGradient(pos.x, pos.y, 0, pos.x, pos.y, tr);
+      tGrad.addColorStop(0, `rgba(0,0,0,${alpha * 0.65})`);
+      tGrad.addColorStop(0.5, `rgba(0,0,0,${alpha * 0.28})`);
+      tGrad.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = tGrad;
+      ctx.fillRect(0, 0, width, height);
+    }
+
+    ctx.restore();
+
+    // === lighter: add glow on top ===
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+
+    const glowR = 300;
+    const glowGrad = ctx.createRadialGradient(gx, gy, 0, gx, gy, glowR);
+    glowGrad.addColorStop(0, 'rgba(0, 215, 255, 0.22)');
+    glowGrad.addColorStop(0.18, 'rgba(0, 160, 240, 0.13)');
+    glowGrad.addColorStop(0.45, 'rgba(0, 90, 190, 0.05)');
+    glowGrad.addColorStop(1, 'rgba(0, 0, 60, 0)');
+    ctx.fillStyle = glowGrad;
+    ctx.fillRect(0, 0, width, height);
+
+    const coreGrad = ctx.createRadialGradient(gx, gy, 0, gx, gy, 65);
+    coreGrad.addColorStop(0, 'rgba(0, 235, 255, 0.42)');
+    coreGrad.addColorStop(0.35, 'rgba(0, 200, 255, 0.20)');
+    coreGrad.addColorStop(1, 'rgba(0, 130, 230, 0)');
+    ctx.fillStyle = coreGrad;
+    ctx.fillRect(0, 0, width, height);
+
+    ctx.restore();
+
+    // Hero text brightness
+    if (heroContent && textRect) {
+      const dx = gx - textRect.cx;
+      const dy = gy - textRect.cy;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      const maxDist = 500;
+      const brightness = Math.max(0, 1 - dist / maxDist);
+      heroContent.style.setProperty('--text-brightness', brightness.toFixed(3));
+    }
+
+    // Cursor dot
+    ctx.beginPath();
+    ctx.fillStyle = 'rgba(0, 235, 255, 0.9)';
+    ctx.shadowColor = 'rgba(0, 220, 255, 0.9)';
+    ctx.shadowBlur = 18;
+    ctx.arc(gx, gy, 5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.shadowBlur = 0;
+  }
+
+  draw();
+})();
+
+// =========================================
+// TOPBAR & SIDE NAV VISIBILITY
+// =========================================
+const topbar = document.getElementById('topbar');
+const topbarMenu = document.getElementById('topbarMenu');
+const topbarChat = document.getElementById('topbarChat');
+const sideNav = document.getElementById('sideNav');
+const heroSection = document.getElementById('hero');
+
+window.addEventListener('scroll', () => {
+  const scrollY = window.scrollY;
+  const heroH = window.innerHeight;
+
+  // Topbar background
+  if (scrollY > 100) {
+    topbar.classList.add('scrolled');
+  } else {
+    topbar.classList.remove('scrolled');
+  }
+
+  // Topbar & side-nav dark mode toggle (only on Hero section)
+  if (heroSection) {
+    const heroBottom = heroSection.offsetTop + heroSection.offsetHeight;
+    const isOnDark = scrollY + 60 < heroBottom;
+    topbar.classList.toggle('on-dark', isOnDark);
+  }
+
+  if (scrollY > heroH * 0.3) {
+    sideNav.classList.add('visible');
+  } else {
+    sideNav.classList.remove('visible');
+  }
+}, { passive: true });
+
+// =========================================
+// SECTION 2: WHY BAYIN — Brunocis scroll reading
+// =========================================
+const readingSection = document.querySelector("[data-reading-section]");
+const readingText = document.querySelector("[data-reading-text]");
+const sourceText = readingText.textContent.trim().replace(/\s+/g, " ");
+
+readingText.innerHTML = sourceText
+  .split(" ")
+  .map((word) => `<span class="read-word">${word}</span>`)
+  .join(" ");
+
+const readWords = [...document.querySelectorAll(".read-word")];
+
+// Replace "Bayin" word with blue logo image
+readWords.forEach(word => {
+  if (word.textContent === 'Bayin') {
+    word.innerHTML = '<img class="why-bayin-logo" src="英文-蓝-2.png" alt="Bayin">';
+    word.classList.add('bayin-logo-word');
+  }
+});
+
+function clampVal(value, min = 0, max = 1) {
+  return Math.min(max, Math.max(min, value));
+}
+
+function updateReading() {
+  const scrollY = window.scrollY || window.pageYOffset;
+  const sectionTop = readingSection.getBoundingClientRect().top + scrollY;
+  const travel = readingSection.offsetHeight - window.innerHeight;
+  const progress = clampVal((scrollY - sectionTop) / Math.max(1, travel));
+  const active = progress * (readWords.length + 2);
+
+  readWords.forEach((word, index) => {
+    const mix = clampVal(active - index, 0, 1);
+    word.style.setProperty("--mix", `${Math.round(mix * 100)}%`);
+    word.classList.toggle("is-read", mix >= 0.98);
+    word.classList.toggle(
+      "is-current",
+      Math.abs(active - index) < 1.15 && mix > 0 && mix < 1
+    );
+  });
+}
+
+// =========================================
+// SECTION 3: ECOSYSTEM WHEEL (fromanother copy)
+// =========================================
+const clamp = (value, min = 0, max = 1) => Math.min(max, Math.max(min, value));
+const wheelSection = document.querySelector("[data-wheel-section]");
+const wheelWords = [...document.querySelectorAll(".eco-word")];
+const wheelCount = document.querySelector("[data-wheel-count]");
+const wheelTitle = document.querySelector("[data-wheel-title]");
+const wheelBody = document.querySelector("[data-wheel-body]");
+const sideNavLabel = document.getElementById('sideNavLabel');
+
+const wheelCopy = [
+  "From vision to positioning, we craft the strategic foundation that guides every brand decision.",
+  "Bold, distinctive visual identities that resonate across cultures and markets.",
+  "Turning concepts into products through research, formulation, and iteration.",
+  "World-class production facilities ensuring quality at scale.",
+  "End-to-end logistics from raw materials to consumer doorstep.",
+  "Digital-first commerce built for global marketplaces.",
+  "Local operations in 100+ markets with native expertise.",
+  "Data-driven marketing and expansion across every channel.",
+  "Understanding consumer behavior to inform every decision.",
+  "Adapting brands for cultural relevance in every region.",
+  "Rigorous testing and certification for every market.",
+  "Cohesive visual systems that define and differentiate brands."
+];
+
+const sideNavLabels = ['Hero', 'Why Bayin', 'Our Ecosystem', 'Brand Showcase', 'Global Presence', 'Join', 'Contact'];
+
+function updateWheel(scrollY) {
+  const rect = wheelSection.getBoundingClientRect();
+  const start = scrollY + rect.top;
+  const travel = wheelSection.offsetHeight - window.innerHeight;
+  const progress = clamp((scrollY - start) / Math.max(1, travel));
+  const virtualIndex = progress * (wheelWords.length - 1);
+  const activeIndex = Math.round(virtualIndex);
+
+  wheelWords.forEach((word, index) => {
+    const offset = index - virtualIndex;
+    const distance = Math.abs(offset);
+    const angle = offset * 0.58 - 0.18;
+    const x = 18 + Math.sin(angle) * 9 - distance * 0.9;
+    const y = 48 + offset * 13.4;
+    const rotation = -12 + offset * 9.5;
+    const scale = Math.max(0.58, 1 - distance * 0.1);
+    const alpha = Math.max(0.1, 1 - distance * 0.24);
+    const blur = distance > 3.1 ? "2px" : "0px";
+
+    word.style.setProperty("--x", `${x}vw`);
+    word.style.setProperty("--y", `calc(${y}vh - 50%)`);
+    word.style.setProperty("--r", `${rotation}deg`);
+    word.style.setProperty("--scale", scale.toFixed(3));
+    word.style.setProperty("--alpha", alpha.toFixed(3));
+    word.style.setProperty("--blur", blur);
+    word.classList.toggle("is-active", index === activeIndex);
+  });
+
+  if (wheelCount) wheelCount.textContent = `${activeIndex + 1} / ${wheelWords.length}`;
+  if (wheelTitle) wheelTitle.textContent = `${wheelWords[activeIndex]?.textContent || ''}.`;
+  if (wheelBody) wheelBody.textContent = wheelCopy[activeIndex] || '';
+}
+
+// Wheel word click → navigate
+wheelWords.forEach(word => {
+  word.addEventListener('click', () => {
+    const href = word.getAttribute('data-href');
+    if (href) window.location.href = href;
+  });
+});
+
+// =========================================
+// SECTION 4: BRAND HORIZONTAL LOCK (fromanother copy)
+// =========================================
+const horizontalSection = document.querySelector("[data-horizontal-section]");
+const posterTrack = document.querySelector("[data-poster-track]");
+let horizontalMax = 0;
+
+function measureHorizontal() {
+  const viewport = window.innerWidth;
+  horizontalMax = Math.max(0, posterTrack.scrollWidth - viewport + viewport * 0.08);
+  horizontalSection.style.height = `${window.innerHeight + horizontalMax}px`;
+}
+
+function updateHorizontal(scrollY) {
+  const rect = horizontalSection.getBoundingClientRect();
+  const start = scrollY + rect.top;
+  const travel = horizontalSection.offsetHeight - window.innerHeight;
+  const progress = clamp((scrollY - start) / Math.max(1, travel));
+  posterTrack.style.transform = `translate3d(${-horizontalMax * progress}px, 0, 0)`;
+}
+
+// =========================================
+// SIDE NAV ACTIVE SECTION
+// =========================================
+const sideNavNumbers = document.querySelectorAll('.side-nav-number');
+const sectionIds = ['hero', 'whySection', 'ecoSection', 'brandSection', 'global', 'partner', 'contact'];
+
+function updateSideNav(scrollY) {
+  let currentSection = 0;
+  sectionIds.forEach((id, i) => {
+    const el = document.getElementById(id);
+    if (el) {
+      const rect = el.getBoundingClientRect();
+      if (rect.top <= window.innerHeight * 0.5) {
+        currentSection = i;
+      }
+    }
+  });
+
+  sideNavNumbers.forEach((num, i) => {
+    num.classList.toggle('active', i === currentSection);
+  });
+
+  if (sideNavLabel) {
+    sideNavLabel.textContent = sideNavLabels[currentSection] || '';
+  }
+}
+
+// =========================================
+// COMBINED RENDER LOOP
+// =========================================
+let ticking = false;
+
+function render() {
+  const scrollY = window.scrollY || window.pageYOffset;
+  updateReading();
+  updateWheel(scrollY);
+  updateHorizontal(scrollY);
+  updateSideNav(scrollY);
+}
+
+function requestRender() {
+  if (ticking) return;
+  ticking = true;
+  requestAnimationFrame(() => {
+    render();
+    ticking = false;
+  });
+}
+
+window.addEventListener("resize", () => {
+  measureHorizontal();
+  render();
+});
+window.addEventListener("scroll", requestRender, { passive: true });
+
+measureHorizontal();
+render();
+
+// =========================================
+// COUNTER ANIMATION (Global Section)
+// =========================================
+const counters = document.querySelectorAll('.counter');
+let countersAnimated = false;
+
+function animateCounters() {
+  if (countersAnimated) return;
+  const globalSection = document.getElementById('global');
+  const rect = globalSection.getBoundingClientRect();
+  if (rect.top < window.innerHeight * 0.8) {
+    countersAnimated = true;
+    counters.forEach(counter => {
+      const target = parseInt(counter.getAttribute('data-target'));
+      const duration = 2000;
+      const startTime = performance.now();
+
+      function updateCounter(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(1, elapsed / duration);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        counter.textContent = Math.floor(eased * target);
+        if (progress < 1) {
+          requestAnimationFrame(updateCounter);
+        } else {
+          counter.textContent = target;
+        }
+      }
+      requestAnimationFrame(updateCounter);
+    });
+  }
+}
+
+window.addEventListener('scroll', animateCounters, { passive: true });
+
+// =========================================
+// FOOTER TITLE SCROLL REVEAL
+// =========================================
+const footerTitle = document.getElementById('footerTitle');
+const footer = document.getElementById('contact');
+
+window.addEventListener('scroll', () => {
+  const footerRect = footer.getBoundingClientRect();
+  if (footerRect.top < window.innerHeight * 0.7) {
+    footerTitle.classList.add('visible');
+  }
+}, { passive: true });
+
+// =========================================
+// SMOOTH ANCHOR SCROLL
+// =========================================
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function(e) {
+    const href = this.getAttribute('href');
+    if (href === '#') return;
+    e.preventDefault();
+    const target = document.querySelector(href);
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth' });
+    }
+  });
+});
+// =========================================
+// GLOBAL CURSOR GLOW — replaces default cursor
+// =========================================
+(function() {
+  const canvas = document.createElement('canvas');
+  canvas.id = 'cursorGlow';
+  canvas.style.cssText = 'position:fixed;inset:0;z-index:9999;pointer-events:none;';
+  document.body.appendChild(canvas);
+  const ctx = canvas.getContext('2d');
+
+  let w = 0, h = 0;
+  function resize() {
+    w = window.innerWidth;
+    h = window.innerHeight;
+    canvas.width = w;
+    canvas.height = h;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const mouse = { x: 0.5, y: 0.5, active: false };
+  const light = { x: 0.5, y: 0.5 };
+  const lightHistory = [];
+  const MAX_HISTORY = 12;
+
+  window.addEventListener('mousemove', (e) => {
+    mouse.x = e.clientX / w;
+    mouse.y = e.clientY / h;
+    mouse.active = true;
+  });
+
+  window.addEventListener('mouseout', () => { mouse.active = false; });
+
+  function draw() {
+    requestAnimationFrame(draw);
+    
+    if (mouse.active) {
+      light.x += (mouse.x - light.x) * 0.08;
+      light.y += (mouse.y - light.y) * 0.08;
+      lightHistory.push({ x: light.x * w, y: light.y * h, time: Date.now() });
+      if (lightHistory.length > MAX_HISTORY) lightHistory.shift();
+    } else {
+      light.x += (0.5 - light.x) * 0.02;
+      light.y += (0.5 - light.y) * 0.02;
+      if (lightHistory.length > 0) lightHistory.shift();
+    }
+
+    const gx = light.x * w;
+    const gy = light.y * h;
+
+    ctx.clearRect(0, 0, w, h);
+
+    // Center dot
+    ctx.beginPath();
+    ctx.arc(gx, gy, 3.5, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+    ctx.fill();
+
+    // Inner glow (cyan)
+    ctx.globalCompositeOperation = 'lighter';
+    const innerGlow = ctx.createRadialGradient(gx, gy, 0, gx, gy, 60);
+    innerGlow.addColorStop(0, 'rgba(0, 215, 255, 0.35)');
+    innerGlow.addColorStop(0.5, 'rgba(0, 180, 255, 0.12)');
+    innerGlow.addColorStop(1, 'rgba(0, 140, 255, 0)');
+    ctx.fillStyle = innerGlow;
+    ctx.fillRect(0, 0, w, h);
+
+    // Outer glow (brand blue)
+    const outerGlow = ctx.createRadialGradient(gx, gy, 0, gx, gy, 200);
+    outerGlow.addColorStop(0, 'rgba(51, 154, 236, 0.10)');
+    outerGlow.addColorStop(0.5, 'rgba(51, 154, 236, 0.04)');
+    outerGlow.addColorStop(1, 'rgba(51, 154, 236, 0)');
+    ctx.fillStyle = outerGlow;
+    ctx.fillRect(0, 0, w, h);
+
+    // Trail
+    const now = Date.now();
+    for (let i = 0; i < lightHistory.length; i++) {
+      const h = lightHistory[i];
+      const age = (now - h.time) / 350;
+      if (age > 1) continue;
+      const alpha = (1 - age) * 0.12;
+      const size = 6 + age * 24;
+      ctx.beginPath();
+      ctx.arc(h.x, h.y, size, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(0, 215, 255, ${alpha})`;
+      ctx.fill();
+    }
+  }
+
+  draw();
+})();
+</script>
+</body>
+</html>
